@@ -2,23 +2,34 @@ const canvas = document.getElementById("canvas");
 canvas.width = window.innerWidth - 5;
 canvas.height = window.innerHeight - 5;
 
-const player_ctx = canvas.getContext("2d");
-player_ctx.fillStyle = "lightgrey";
+const ctx = canvas.getContext("2d");
 
-const player_height = window.innerHeight/20;
-const player_width = window.innerWidth/4;
-const player_y = window.innerHeight - player_height - 15;
-var player_x = window.innerWidth/2-player_width/2;
+var paddle = {
 
+    height : window.innerHeight/20,
+    width : window.innerWidth/4,
+    y : window.innerHeight - window.innerHeight/20 - 15,
+    x : window.innerWidth/2-window.innerWidth/4/2
+
+}
+
+const enemy_max = 3;
+const enemy_height = window.innerHeight/25;
+const enemy_width = window.innerWidth/4;
+var enemy_isdead = [[false, false, false], 
+                    [false, false, false],
+                    [false, false, false]];
+
+//controls
 document.addEventListener("mousemove", (e) => {
 
-    player_x = e.pageX - player_width/2;
+    paddle.x = e.pageX - paddle.width/2;
 
 });
 
 document.addEventListener("touchmove", (e) => {
 
-    player_x = e.pageX - player_width/2;
+    paddle.x = e.pageX - paddle.width/2;
 
 });
 
@@ -28,7 +39,26 @@ function update(){
 
     requestAnimationFrame(update);
 
-    player_ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
-    player_ctx.fillRect(player_x, player_y, player_width, player_height);
+    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    
+    createEnemies();
+    ctx.fillStyle = "lightgrey";
+
+    ctx.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
+
+}
+
+function createEnemies(){
+
+    ctx.fillStyle = "orange";
+
+    for(var y = 0; y < 3; y++)
+
+        for(var x = 0; x < enemy_max; x++){
+
+            ctx.fillRect(50 + 50*x + x*enemy_width, 50 + y*50, enemy_width, enemy_height);
+            enemy_isdead.push()
+
+        }
 
 }
