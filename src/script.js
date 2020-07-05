@@ -3,6 +3,7 @@ canvas.width = window.innerWidth - 5;
 canvas.height = window.innerHeight - 5;
 
 const ctx = canvas.getContext("2d");
+const enemy_max = 3;
 
 var paddle = {
 
@@ -13,12 +14,14 @@ var paddle = {
 
 }
 
-const enemy_max = 3;
-const enemy_height = window.innerHeight/25;
-const enemy_width = window.innerWidth/4;
-var enemy_isdead = [[false, false, false], 
-                    [false, false, false],
-                    [false, false, false]];
+function enemy(){
+
+    return{
+        height : window.innerHeight/25,
+        width : window.innerWidth/4
+    };
+
+}
 
 //controls
 document.addEventListener("mousemove", (e) => {
@@ -56,8 +59,7 @@ function createEnemies(){
 
         for(var x = 0; x < enemy_max; x++){
 
-            ctx.fillRect(50 + 50*x + x*enemy_width, 50 + y*50, enemy_width, enemy_height);
-            enemy_isdead.push()
+            ctx.fillRect(50 + 50*x + x*enemy().width, 50 + y*50, enemy().width, enemy().height);
 
         }
 
