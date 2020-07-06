@@ -59,7 +59,7 @@ function createEnemies(){
 
         for(var x = 0; x < enemy_max; x++){
 
-            ctx.fillRect(window.innerWidth/30 + window.innerWidth/30*x + x*enemy().width, 50 + y*50, enemy().width, enemy().height);
+            ctx.fillRect(window.innerWidth/12 + window.innerWidth/30*x + x*enemy().width, 50 + y*50, enemy().width, enemy().height);
 
         }
 
