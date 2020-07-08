@@ -3,7 +3,7 @@ canvas.width = window.innerWidth - 5;
 canvas.height = window.innerHeight - 5;
 
 const ctx = canvas.getContext("2d");
-const enemy_max = 3;
+const enemy_max = 3; // = enemy-rows with each 3 enemies
 
 var paddle = {
 
@@ -31,6 +31,8 @@ function enemy(){
         width : window.innerWidth/4,
         x : null,
         y : null,
+        hits: 0,
+        fill: 'orange',
         isDead: false
     };
 
@@ -98,12 +100,24 @@ function update(){
 
         enemy_column.forEach((nmy) => {
 
+            if(!nmy.isDead){
+
             if(ball.x + ball.radius >= nmy.x &&
                 ball.x - ball.radius <= nmy.x + nmy.width &&
                     ball.y + ball.radius >= nmy.y &&
-                        ball.y - ball.radius <= nmy.y + nmy.height)
+                        ball.y - ball.radius <= nmy.y + nmy.height){
         
-                            ball.deltaY *= -1;
+                            ball.deltaY *= -1
+                            
+                            if(nmy.hits <2){
+                                nmy.hits++
+                                nmy.fill = `rgba(252, 165, 3, ${1/(nmy.hits + 1)})`
+                            }else
+                                nmy.isDead = true;
+
+                        }
+
+            }
 
         })
 
@@ -116,16 +130,21 @@ function update(){
 
 function createEnemies(){
 
-    ctx.fillStyle = "orange";
-
     for(var y = 0; y < 3; y++)
 
         for(var x = 0; x < enemy_max; x++){
+
+            ctx.fillStyle = enemy_structure[x][y].fill;
+            console.log(enemy_structure[x][y].fill)
+
+            if(!enemy_structure[x][y].isDead){
 
             ctx.fillRect(window.innerWidth/12 + window.innerWidth/30*x + x*enemy().width, 50 + y*50, enemy().width, enemy().height);
 
             enemy_structure[x][y].x = window.innerWidth/12 + window.innerWidth/30*x + x*enemy().width;
             enemy_structure[x][y].y = 50 + y*50;
+
+            }
 
         }
 
