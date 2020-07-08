@@ -14,14 +14,35 @@ var paddle = {
 
 }
 
+var ball = {
+
+    radius: window.innerWidth/45,
+    x: window.innerWidth/2,
+    y: window.innerHeight/2,
+    deltaX: 3,
+    deltaY: 3
+
+}
+
 function enemy(){
 
     return{
         height : window.innerHeight/25,
-        width : window.innerWidth/4
+        width : window.innerWidth/4,
+        x : null,
+        y : null,
+        isDead: false
     };
 
 }
+
+const enemy_structure = [
+
+    [new enemy(), new enemy(), new enemy()],
+    [new enemy(), new enemy(), new enemy()],
+    [new enemy(), new enemy(), new enemy()]
+
+]
 
 //controls
 document.addEventListener("mousemove", (e) => {
@@ -48,6 +69,48 @@ function update(){
     ctx.fillStyle = "lightgrey";
 
     ctx.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
+    ctx.fillStyle = "aquamarine";
+
+    ctx.beginPath();
+    ctx.ellipse(ball.x, ball.y, ball.radius, ball.radius, Math.PI * 2, 0, Math.PI * 2);
+    ctx.fill();
+
+    //ball-physics
+
+    if(ball.x <= ball.radius || ball.x >= window.innerWidth - ball.radius)
+        ball.deltaX *= -1;
+    
+    if(ball.y <= ball.radius || ball.y >= window.innerHeight - ball.radius)
+        ball.deltaY *= -1;
+
+        //player-collision-detection
+
+    if(ball.x + ball.radius >= paddle.x &&
+        ball.x - ball.radius <= paddle.x + paddle.width &&
+            ball.y + ball.radius >= paddle.y &&
+                ball.y - ball.radius <= paddle.y + paddle.height)
+
+                    ball.deltaY *= -1;
+
+        //enemy-collision-detection
+
+    enemy_structure.forEach((enemy_column) => {
+
+        enemy_column.forEach((nmy) => {
+
+            if(ball.x + ball.radius >= nmy.x &&
+                ball.x - ball.radius <= nmy.x + nmy.width &&
+                    ball.y + ball.radius >= nmy.y &&
+                        ball.y - ball.radius <= nmy.y + nmy.height)
+        
+                            ball.deltaY *= -1;
+
+        })
+
+    })
+
+    ball.x += ball.deltaX
+    ball.y += ball.deltaY
 
 }
 
@@ -60,6 +123,9 @@ function createEnemies(){
         for(var x = 0; x < enemy_max; x++){
 
             ctx.fillRect(window.innerWidth/12 + window.innerWidth/30*x + x*enemy().width, 50 + y*50, enemy().width, enemy().height);
+
+            enemy_structure[x][y].x = window.innerWidth/12 + window.innerWidth/30*x + x*enemy().width;
+            enemy_structure[x][y].y = 50 + y*50;
 
         }
 
