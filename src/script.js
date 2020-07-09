@@ -112,8 +112,10 @@ function update(){
                             if(nmy.hits <2){
                                 nmy.hits++
                                 nmy.fill = `rgba(252, 165, 3, ${1/(nmy.hits + 1)})`
-                            }else
-                                nmy.isDead = true;
+                            }else{
+                                nmy.isDead = true
+                                speedUp();
+                            }
 
                         }
 
@@ -147,5 +149,19 @@ function createEnemies(){
             }
 
         }
+
+}
+
+function speedUp(){
+
+    if(ball.deltaX > 0)
+        ball.deltaX += 0.35;
+    else
+        ball.deltaX -= 0.35;
+
+    if(ball.deltaY > 0)
+        ball.deltaY += 0.35;
+    else
+        ball.deltaY -= 0.35;
 
 }
