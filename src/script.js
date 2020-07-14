@@ -102,8 +102,16 @@ function ball_physics(){
     if(ball.x <= ball.radius || ball.x >= window.innerWidth - ball.radius)
         ball.deltaX *= -1;
     
-    if(ball.y <= ball.radius || ball.y >= window.innerHeight - ball.radius)
+    if(ball.y <= ball.radius)
         ball.deltaY *= -1;
+
+        //lose
+    if(ball.y >= window.innerHeight - ball.radius){
+
+        alert(`score:\n${kills}`);
+        reset();
+
+    }
 
         //player-collision-detection
 
@@ -238,5 +246,27 @@ function speedUP(){
         ball.deltaY += 0.1;
     else
         ball.deltaY -= 0.1;
+
+}
+
+function reset(){
+
+    ball.x = window.innerWidth/2;
+    ball.y = window.innerHeight/2;
+    ball.deltaX = 4;
+    ball.deltaY = 4;
+    kills = 0;
+
+    enemy_structure.forEach(enemy_column => {
+
+        enemy_column.forEach(nmy => {
+
+            nmy.isDead = false;
+            nmy.hits = 0;
+            nmy.fill = 'orange';
+
+        })
+
+    })
 
 }
