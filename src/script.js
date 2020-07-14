@@ -5,6 +5,11 @@ canvas.height = window.innerHeight - 5;
 const ctx = canvas.getContext("2d");
 const enemy_max = 3; // = enemy-rows with each 3 enemies
 
+var kills = 0;
+var respawn_active = false;
+var respawn_happened = false;
+var alpha = 0;
+
 var paddle = {
 
     height : window.innerHeight/20,
@@ -19,8 +24,8 @@ var ball = {
     radius: window.innerWidth/45,
     x: window.innerWidth/2,
     y: window.innerHeight/2,
-    deltaX: 3,
-    deltaY: 3
+    deltaX: 4,
+    deltaY: 4
 
 }
 
@@ -63,6 +68,9 @@ update();
 
 function update(){
 
+    console.log(ball.deltaX + "  " + ball.deltaY);
+
+    if(!respawn_active)
     requestAnimationFrame(update);
 
     ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
@@ -77,7 +85,19 @@ function update(){
     ctx.ellipse(ball.x, ball.y, ball.radius, ball.radius, Math.PI * 2, 0, Math.PI * 2);
     ctx.fill();
 
-    //ball-physics
+    if(!respawn_active)
+        ball_physics();
+
+    //respawn-mechanic
+
+    if(!respawn_happened)
+
+    if(kills !== 0 && kills % 9 === 0 && !respawn_active && !respawn_happened)
+        respawn();
+
+}
+
+function ball_physics(){
 
     if(ball.x <= ball.radius || ball.x >= window.innerWidth - ball.radius)
         ball.deltaX *= -1;
@@ -114,7 +134,27 @@ function update(){
                                 nmy.fill = `rgba(252, 165, 3, ${1/(nmy.hits + 1)})`
                             }else{
                                 nmy.isDead = true
-                                speedUp();
+
+                                if(kills % 9 === 0){
+                                    respawn_happened = false;
+                                    alpha = 0;
+
+                                    enemy_structure.forEach(enemy_column1 => {
+
+                                        enemy_column1.forEach(nmy1 => {
+
+                                            nmy1.hits = 0;
+
+                                        })
+
+                                    })
+
+                                }
+
+                                kills++
+                                nmy.fill = "rgba(252, 165, 3, 0)"
+                                speedUP();
+                                
                             }
 
                         }
@@ -137,7 +177,6 @@ function createEnemies(){
         for(var x = 0; x < enemy_max; x++){
 
             ctx.fillStyle = enemy_structure[x][y].fill;
-            console.log(enemy_structure[x][y].fill)
 
             if(!enemy_structure[x][y].isDead){
 
@@ -152,16 +191,52 @@ function createEnemies(){
 
 }
 
-function speedUp(){
+function respawn(){
+
+    if(!respawn_active){
+
+        respawn_active = true;
+        ball.x = window.innerWidth/2;
+        ball.y = window.innerHeight/2;
+
+    }
+
+    if(alpha < 1)
+    requestAnimationFrame(respawn);
+    else{
+        respawn_active = false;
+        respawn_happened = true;
+        update();
+    }
+
+    alpha += 0.01;
+
+    enemy_structure.forEach(enemy_column => {
+
+        enemy_column.forEach(nmy => {
+
+            nmy.isDead = false;
+            nmy.fill = `rgba(252, 165, 3, ${alpha})`
+
+        });
+
+    })
+
+    if(alpha < 1)
+        update();
+
+}
+
+function speedUP(){
 
     if(ball.deltaX > 0)
-        ball.deltaX += 0.35;
+        ball.deltaX+=0.1;
     else
-        ball.deltaX -= 0.35;
+        ball.deltaX -= 0.1;
 
     if(ball.deltaY > 0)
-        ball.deltaY += 0.35;
+        ball.deltaY += 0.1;
     else
-        ball.deltaY -= 0.35;
+        ball.deltaY -= 0.1;
 
 }
