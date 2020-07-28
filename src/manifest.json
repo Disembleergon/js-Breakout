@@ -1,0 +1,7 @@
+{
+
+    "name":"Breakout",
+    "description":"A Breakout-clone written in Javascript",
+    "display":"standalone"
+
+}
