@@ -1,3 +1,11 @@
+//improve offline experience
+
+if("serviceWorker" in navigator){
+
+    navigator.serviceWorker.register("./sw.js");
+
+}
+
 const canvas = document.getElementById("canvas");
 canvas.width = window.innerWidth - 5;
 canvas.height = window.innerHeight - 5;
